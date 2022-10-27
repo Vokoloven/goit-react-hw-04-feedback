@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import { useState } from 'react';
 import { Button, buttonProps, StyledDiv } from '../Button/Button';
 import { Statistic } from 'components/Statistics/Statistics';
