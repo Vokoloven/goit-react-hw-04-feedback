@@ -1,67 +1,79 @@
 import { Component } from 'react';
+import { useState } from 'react';
 import { Button, buttonProps, StyledDiv } from '../Button/Button';
 import { Statistic } from 'components/Statistics/Statistics';
 import { Notification } from 'components/Notification/Notification';
 import { Section } from '../Section/Section';
-export class Feedback extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-    total: 0,
-    positiveFeedback: 0,
-  };
 
-  countTotalFeedbacks = () => {
-    this.setState(state => {
-      const { good, neutral, bad } = state;
+export const Feedback = () => {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [posFeedback, setPosFeedback] = useState(0);
 
-      return { total: good + neutral + bad };
-    });
-  };
-
-  countPositiveFeedbacks = () => {
-    this.setState(state => {
-      const { good, total } = state;
-
-      return { positiveFeedback: Math.round((good / total) * 100) };
-    });
-  };
-
-  feedbackButton = e => {
+  const feedbackButton = e => {
     let { name } = e.target;
     name = name.toLowerCase();
 
-    this.setState(prevState => {
-      return { [name]: prevState[name] + 1 };
-    });
+    if (name === 'good') {
+      setGood(prevCounter => {
+        return prevCounter + 1;
+      });
+    } else if (name === 'neutral') {
+      setNeutral(prevCounter => {
+        return prevCounter + 1;
+      });
+    } else if (name === 'bad') {
+      setBad(prevCounter => {
+        return prevCounter + 1;
+      });
+    }
 
-    this.countTotalFeedbacks();
-    this.countPositiveFeedbacks();
+    countTotalFeedbacks();
+
+    countPositiveFeedbacks();
   };
 
-  render() {
-    const { good, neutral, bad } = this.state;
-    return (
-      <>
-        <Section title="Please leave feedback">
-          <StyledDiv>
-            {buttonProps.map(({ name }) => {
-              return (
-                <Button key={name} name={name} onClick={this.feedbackButton}>
-                  {name}
-                </Button>
-              );
-            })}
-          </StyledDiv>
+  const countTotalFeedbacks = () => {
+    setTotal(prevCounter => {
+      return good + bad + neutral;
+    });
+  };
 
-          {neutral === 0 && good === 0 && bad === 0 ? (
-            <Notification message=" There is no feedback" />
-          ) : (
-            <Statistic state={this.state}></Statistic>
-          )}
-        </Section>
-      </>
-    );
-  }
-}
+  const countPositiveFeedbacks = () => {
+    setPosFeedback(prevCounter => {
+      if (good && total) {
+        return Math.round((good / total) * 100);
+      }
+    });
+  };
+
+  return (
+    <>
+      <Section title="Please leave feedback">
+        <StyledDiv>
+          {buttonProps.map(({ name }) => {
+            return (
+              <Button key={name} name={name} onClick={feedbackButton}>
+                {name}
+              </Button>
+            );
+          })}
+        </StyledDiv>
+
+        {neutral === 0 && good === 0 && bad === 0 ? (
+          <Notification message=" There is no feedback" />
+        ) : (
+          <Statistic
+            good={good}
+            neutral={neutral}
+            bad={bad}
+            total={total}
+            posFeedback={posFeedback}
+          ></Statistic>
+        )}
+      </Section>
+    </>
+  );
+};

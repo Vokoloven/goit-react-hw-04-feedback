@@ -5,16 +5,15 @@ const StyledTitleH2 = styled.h2`
   font-size: ${p => p.theme.fontSizes.l}px;
 `;
 
-export const Statistic = ({ state }) => {
-  console.log(state);
+export const Statistic = ({ good, neutral, bad, total, posFeedback }) => {
   return (
     <>
       <StyledTitleH2>Statistic</StyledTitleH2>
-      <p>Good: {state.good}</p>
-      <p>Neutral: {state.neutral}</p>
-      <p>Bad: {state.bad}</p>
-      <p>Total: {state.total}</p>
-      <p>Positive feedbacks: {state.positiveFeedback}%</p>
+      <p>Good: {good}</p>
+      <p>Neutral: {neutral}</p>
+      <p>Bad: {bad}</p>
+      <p>Total: {total}</p>
+      <p>Positive feedbacks: {posFeedback}%</p>
     </>
   );
 };
