@@ -39,9 +39,7 @@ export const Feedback = () => {
 
     const countPositiveFeedbacks = () => {
       setPosFeedback(prevCounter => {
-        if (good && total) {
-          return Math.round((good / total) * 100);
-        }
+        return Math.round((good / total) * 100);
       });
     };
 
