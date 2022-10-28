@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, buttonProps, StyledDiv } from '../Button/Button';
 import { Statistic } from 'components/Statistics/Statistics';
 import { Notification } from 'components/Notification/Notification';
@@ -28,25 +28,26 @@ export const Feedback = () => {
         return prevCounter + 1;
       });
     }
+  };
+
+  useEffect(() => {
+    const countTotalFeedbacks = () => {
+      setTotal(prevState => {
+        return good + bad + neutral;
+      });
+    };
+
+    const countPositiveFeedbacks = () => {
+      setPosFeedback(prevCounter => {
+        if (good && total) {
+          return Math.round((good / total) * 100);
+        }
+      });
+    };
 
     countTotalFeedbacks();
-
     countPositiveFeedbacks();
-  };
-
-  const countTotalFeedbacks = () => {
-    setTotal(prevCounter => {
-      return good + bad + neutral;
-    });
-  };
-
-  const countPositiveFeedbacks = () => {
-    setPosFeedback(prevCounter => {
-      if (good && total) {
-        return Math.round((good / total) * 100);
-      }
-    });
-  };
+  }, [good, bad, neutral, total]);
 
   return (
     <>
